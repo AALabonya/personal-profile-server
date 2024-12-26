@@ -14,8 +14,9 @@ const app: Application = express();
 
 app.use(
   cors({
+    origin: ['https://dasboard-admin-tau.vercel.app','https://portfolio-frontend-three-plum.vercel.app','http://localhost:3000','http://localhost:5173'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-    origin: ["http://localhost:5173","http://localhost:3000" as string],
   })
 );
 app.use(cookieParser());
