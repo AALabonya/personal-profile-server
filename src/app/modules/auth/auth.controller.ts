@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import config from "../../config";
-import catchAsync from "../../utils/catchAsync";
+import { catchAsync } from "../../utils/catchAsync";
+
 import sendResponse from "../../utils/sendResponse";
 import { authServices } from "./auth.service";
 

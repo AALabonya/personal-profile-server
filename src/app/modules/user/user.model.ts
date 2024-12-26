@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { TUser } from "./user.interface";
 
 
+
 // import config from "../../config";
 // import bcrypt from 'bcrypt';
 
@@ -20,18 +21,10 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
     },
-    phone: {
-      type: String,
-      required: true,
-    },
-    address: {
-      type: String,
-      required: false,
-    },
     role: {
       type: String,
-      enum: ['admin', 'customer', 'vendor'],
-      default: 'customer',
+      enum: ['admin'],
+      default: 'admin',
     },
     image: {
       type: String,

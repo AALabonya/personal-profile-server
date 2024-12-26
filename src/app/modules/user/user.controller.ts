@@ -1,6 +1,8 @@
-import catchAsync from "../../utils/catchAsync";
+
+import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { UserServices } from "./user.service";
+
 
 
 const getProfile = catchAsync(async (req, res) => {

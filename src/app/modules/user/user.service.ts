@@ -1,6 +1,9 @@
 import { Request } from "express";
-import { User } from "./user.model";
+
 import AppError from "../../errors/AppError";
+import { User } from "./user.model";
+
+
 
 const getProfileFromDB = async (req: Request) => {
     //getting the extracted data from decoded token
@@ -97,7 +100,6 @@ export const UserServices = {
     getAllUsersFromDB,
     promoteUserToAdminInDB,
     deleteUserFromDB,
-
     getFollowedUsers,
     getPaidUsersFromDB,
 }

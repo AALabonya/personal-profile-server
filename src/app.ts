@@ -1,31 +1,45 @@
-import express, { Application, Request, Response } from "express";
-import cors from "cors";
-import router from "./app/routes";
-import notFoundError from "./app/middlewares/notFoundError";
-import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, { Application, NextFunction, Request, Response } from 'express';
 
+import config from './app/config';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
+import routes from './app/routes';
+import { StatusCodes } from 'http-status-codes';
 
 const app: Application = express();
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:5173","http://localhost:3000" as string],
+  })
+);
+app.use(cookieParser());
+
+//parser
 app.use(express.json());
-app.use(cookieParser())
-app.use(cors({ origin: '*', credentials: true, methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', }));
+app.use(express.urlencoded({ extended: true }));
 
+app.use('/uploads', express.static('uploads'));
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("QuickMart Server");
+app.use('/api', routes);
+
+//Testing
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: 'Welcome to the Personal Website API',
+  });
 });
 
-//application route
-app.use('/api', router);
+//global error handler
+app.use(globalErrorHandler);
 
-
-
-//not found error handler
-app.all("*", notFoundError)
-
-//global error handler 
-app.use(globalErrorHandler)
+//handle not found
+// app.use(notFound);
 
 export default app;

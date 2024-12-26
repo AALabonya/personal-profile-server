@@ -1,16 +1,16 @@
 
-import { USER_ROLE } from "./user.constants";
+export const ROLE = {
+  admin: 'admin',
+} as const;
 
 export type TUser = {
   name: string;
   email: string;
   password: string;
-  phone: string;
-  address?: string;
   role: TUserRoles;
   image?: string;
 
 };
 
 
-export type TUserRoles = keyof typeof USER_ROLE;
+export type TUserRoles = keyof typeof ROLE;

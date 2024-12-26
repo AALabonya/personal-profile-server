@@ -1,7 +1,8 @@
 import config from "../config";
-import { TUserRoles } from "../modules/user/user.interface";
-import catchAsync from "../utils/catchAsync"
+
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { catchAsync } from "../utils/catchAsync";
+import { TUserRoles } from "../modules/User/user.interface";
 
 const auth = (...requiredRoles: TUserRoles[]) => {
     return catchAsync(async (req, res, next) => {
@@ -21,7 +22,7 @@ const auth = (...requiredRoles: TUserRoles[]) => {
 
         const decoded = jwt.verify(
             token as string,
-            config.JWT_ACCESS_SECRET as string,
+            config.jwt_access_secret as string,
         ) as JwtPayload;
 
         req.user = decoded;

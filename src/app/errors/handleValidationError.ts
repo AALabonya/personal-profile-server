@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
-import { TErrorMessages, TGenericErrorResponse } from "../interface/error";
+import { TErrorMessages, TGenericErrorResponse } from "../interfaces/error.interface";
+
 
 const handleValidationError = (err:mongoose.Error.ValidationError):TGenericErrorResponse=>{
-    const errorMessages:TErrorMessages = Object.values(err.errors).map((val:mongoose.Error.ValidatorError | mongoose.Error.CastError)=>{
+    const errorMessages:TErrorMessages= Object.values(err.errors).map((val:mongoose.Error.ValidatorError | mongoose.Error.CastError)=>{
         return {
             path:val?.path,
             message:val?.message,
@@ -20,4 +21,3 @@ const handleValidationError = (err:mongoose.Error.ValidationError):TGenericError
 };
 
 export default handleValidationError;
-

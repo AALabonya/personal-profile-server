@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
-import {  TErrorMessages, TGenericErrorResponse } from "../interface/error";
+import { TErrorMessages, TGenericErrorResponse } from "../interfaces/error.interface";
 
-const handleCastError = (err:mongoose.Error.CastError):TGenericErrorResponse =>{
-    const errorMessages:TErrorMessages = [
+
+const handleCastError = (err:mongoose.Error.CastError):TGenericErrorResponse=>{
+    const errorMessages:TErrorMessages
+    
+    = [
         {
             path:'',
             message:err.message,

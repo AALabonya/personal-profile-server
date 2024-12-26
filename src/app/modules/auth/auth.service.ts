@@ -2,11 +2,13 @@
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { sendEmail } from "../../utils/sendEmail";
-import { TUser } from "../user/user.interface";
-import { User } from "../user/user.model";
+
 import { TLoginUser } from "./auth.interface";
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { TUser } from "../User/user.interface";
+import { User } from "../User/user.model";
+
 
 const signUp = async (payload: TUser) => {
     const result = await User.create(payload);
@@ -16,14 +18,12 @@ const signUp = async (payload: TUser) => {
         email: result?.email,
         role: result?.role,
         name: result?.name,
-        phone: result?.phone,
-        address: result?.address,
 
     };
 
-    const accessToken = jwt.sign(jwtPayload, config.JWT_ACCESS_SECRET as string, {
+    const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
         expiresIn: config.jwt_access_expires_in,
-    });
+    }); 
 
     //creating refresh token
     const refreshPayload = {
@@ -31,12 +31,10 @@ const signUp = async (payload: TUser) => {
         email: result?.email,
         role: result?.role,
         name: result?.name,
-        phone: result?.phone,
-        address: result?.address,
 
     };
 
-    const refreshToken = jwt.sign(refreshPayload, config.JWT_REFRESH_SECRET as string, {
+    const refreshToken = jwt.sign(refreshPayload, config.jwt_refresh_secret as string, {
         expiresIn: config.jwt_refresh_expires_in,
     });
 
@@ -46,16 +44,10 @@ const signUp = async (payload: TUser) => {
 
 const loginUser = async (payload: TLoginUser) => {
     const user = await User.findOne({ email: payload?.email }).select('-createdAt -updatedAt -__v');
-    //checking if the user exist or not 
+
     if (!user) {
         throw new AppError(400, 'User does not exist!');
     }
-
-    //matching the given password in database
-    // const comparePassword = await bcrypt.compare(payload?.password, user?.password);
-    // if (!comparePassword) {
-    //     throw new AppError(404, 'Password does not match!');
-    // }
 
     //creating access token
     const jwtPayload = {
@@ -63,12 +55,10 @@ const loginUser = async (payload: TLoginUser) => {
         email: user?.email,
         role: user?.role,
         name: user?.name,
-        phone: user?.phone,
-        address: user?.address,
 
     };
 
-    const accessToken = jwt.sign(jwtPayload, config.JWT_ACCESS_SECRET as string, {
+    const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
         expiresIn: config.jwt_access_expires_in,
     });
 
@@ -78,12 +68,9 @@ const loginUser = async (payload: TLoginUser) => {
         email: user?.email,
         role: user?.role,
         name: user?.name,
-        phone: user?.phone,
-        address: user?.address,
-
     };
 
-    const refreshToken = jwt.sign(refreshPayload, config.JWT_REFRESH_SECRET as string, {
+    const refreshToken = jwt.sign(refreshPayload, config.jwt_refresh_secret as string, {
         expiresIn: config.jwt_refresh_expires_in,
     });
 
@@ -105,7 +92,7 @@ const loginUser = async (payload: TLoginUser) => {
 const refreshToken = async (token: string) => {
     const decoded = jwt.verify(
         token,
-        config.JWT_REFRESH_SECRET as string,
+        config.jwt_refresh_secret as string,
     ) as JwtPayload;
 
     const { userId } = decoded;
@@ -121,12 +108,10 @@ const refreshToken = async (token: string) => {
         email: user?.email,
         role: user?.role,
         name: user?.name,
-        phone: user?.phone,
-        address: user?.address,
 
     };
 
-    const accessToken = jwt.sign(jwtPayload, config.JWT_ACCESS_SECRET as string, {
+    const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
         expiresIn: config.jwt_access_expires_in,
     });
 
@@ -155,17 +140,15 @@ const forgetPassword = async (email: string) => {
         email: user?.email,
         role: user?.role,
         name: user?.name,
-        phone: user?.phone,
-        address: user?.address,
 
     };
 
-    const resetToken = jwt.sign(jwtPayload, config.JWT_ACCESS_SECRET as string, {
+    const resetToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
         expiresIn: config.jwt_access_expires_in,
     });
 
 
-    const resetUILink = `${config.reset_ui_link}/reset-password?id=${user.id}&token=${resetToken} `;
+    const resetUILink = `${config.client_url}/reset-password?id=${user.id}&token=${resetToken} `;
     sendEmail(user.email, resetUILink);
 
 };
@@ -175,7 +158,7 @@ const resetPassword = async (payload: { id: string, password: string }, token: s
 
     const decoded = jwt.verify(
         token,
-        config.JWT_ACCESS_SECRET as string,
+        config.jwt_access_secret as string,
     ) as JwtPayload;
 
     const newPassword = await bcrypt.hash(
@@ -190,9 +173,6 @@ const resetPassword = async (payload: { id: string, password: string }, token: s
             password: payload.password,
         }
     )
-
-
-
 };
 
 

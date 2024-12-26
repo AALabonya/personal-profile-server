@@ -1,52 +1,49 @@
 import express from 'express';
-import { UserControllers } from './user.controller';
+
 import auth from '../../middlewares/auth';
-import { USER_ROLE } from './user.constants';
+
 import { multerUpload } from '../../config/multer.config';
+import { UserControllers } from './user.controller';
+
 
 const router = express.Router();
 
 router.get(
     '/me',
-    auth(USER_ROLE.admin, USER_ROLE.customer, USER_ROLE.vendor),
+    auth("admin"),
     UserControllers.getProfile
 );
 
 router.patch(
     '/me',
-    auth(USER_ROLE.admin, USER_ROLE.customer, USER_ROLE.vendor),
+    auth("admin"),
     multerUpload.single('image'),
     UserControllers.updateProfile
 );
 
 router.get(
     '/',
-    auth(USER_ROLE.admin),
+    auth("admin"),
     UserControllers.getAllUsers,
 );
 
 router.patch(
     '/promote/:id',
-    auth(USER_ROLE.admin),
+    auth("admin"),
     UserControllers.promoteUserToAdmin,
 );
 
 router.delete(
     '/:id',
-    auth(USER_ROLE.admin),
+    auth("admin"),
     UserControllers.deleteUser,
 );
 
 
 
 router.get(
-    '/getFollowedUsers',
-    // auth(USER_ROLE.admin, USER_ROLE.user),
-    UserControllers.getFollowedUsers);
-
-router.get(
     '/getPaidUsers',
-    auth(USER_ROLE.admin),
+    auth("admin"),
     UserControllers.getPaidUsers,
 )
 
